@@ -15,7 +15,14 @@ will attempt to pull in the required dependencies and build the package.
 
 ## Setting up the Home Project
 
+To create an account on Chum, follow the instructions on [the Chum help page](https://github.com/sailfishos-chum/main#user-content-submitting-actively-maintained-software).
+
+After creating a user account you are automatically the owner of the so-called "Home Project" named `home:$username`.
+You can create various packages in that project and also create sub-projects.
+
 ## Adding a Package
+
+Click "Create Package" in your project.
 
 ### `tar_git`
 
@@ -36,13 +43,13 @@ cloned .spec file. This mainly affects the contents of the %{version} and
 For some examples, see below.
 
 `%specialversion` will consist of:
- - if a tag parameter was specified n the `_service`, it will be used as the version
- - if a branch parameter was specified n the `_service`, it will be appended to the name, along with the hash of the git ref, prepended by the letter "g".
- - if no tag parameter was specified n the `_service`, but a branch name was, it will contain the value of the *latest* tag in the branch, and branch name, timestamp, and git ref hash appended to it.
+ - if a tag parameter was specified in the `_service`, it will be used as the version
+ - if a branch parameter was specified in the `_service`, it will be appended to the name, along with the hash of the git ref, prepended by the letter "g".
+ - if no tag parameter was specified in the `_service`, but a branch name was, it will contain the value of the *latest* tag in the branch, and the branch name, timestamp, and git ref hash appended to it.
 
 `%specialrevision` will have the format X.Y.Z where:
  - X is always 1
- - Y is a counter which roughly corresponds to the number of revisions of the OBS package source.
+ - Y is a counter that roughly corresponds to the number of revisions of the OBS package source.
  - Z is a counter starting at 1 and increasing each time OBS decides to automatically rebuild the package (usually because a dependency was rebuilt or newly published)
 
 Note that these auto-generated revision and version parameters will replace the
@@ -65,7 +72,7 @@ The tarball produced has the following properties:
    - the same applies to submodules within submodules.
 
 The service will also extract `rpm` sub-directory from the source repo and place its contents in the OBS package root.
-So the root may end up looking like:
+So the root may end up looking like this:
 
 ```
   _service
@@ -123,12 +130,12 @@ So if the upstream submodule is called "upstream", the line should look like
 ```
 You can choose a literal string as the name, but you must use the %{version} macro.
 
-Similarly, if you change working directories in the build process, be aware where the actual source code is located relative to `%{_builddir}`:
+Similarly, if you change working directories in the build process, be aware of where the actual source code is located relative to `%{_builddir}`:
 
 `%{_builddir}/%{name}-%{version}/upstream`
 
 On the other hand, the contents of the `rpm` sub-directory will be in the
-package root, not under `rpm` during build. Usually this does not affect you
+package root, not under `rpm` during the build. Usually, this does not affect you
 though, as OBS sets the `%{_sourcedir}` macro accordingly, so things like
 `%SOURCE2` will work as intended.
 
@@ -157,7 +164,7 @@ Your project does either not contain the file, `rpm/application.spec`, or the
 ### ERROR: couldn't clone foo
 
 Check the `url` parameter in the `_service` file.
-Also check the settings on your git host. The repository may be set to private.
+Also, check the settings on your git host. The repository may be set to private.
 And be sure to use a clone URL, not a web view of the repo (like git-web).
 
 ```
@@ -167,15 +174,15 @@ And be sure to use a clone URL, not a web view of the repo (like git-web).
 
 ### ERROR: Need single spec file in rpm
 
-Your project does contain directory called `rpm`, but that directory contains more than one .spec file so `tar_git` gets confused.
+Your project does contain a directory called `rpm`, but that directory contains more than one .spec file, so `tar_git` gets confused.
 
 There are three possible solutions for that.
 
  1. delete one of the .spec files in the repo ;)
- 1. name the OBS package, or the spec file so their names match exactly. `tar_git` will then pick up the spec file that as the same name as the project.
+ 1. name the OBS package or the spec file so their names match exactly. `tar_git` will then pick up the spec file that has the same name as the project.
 
- Note that if you actually want to build all the spec files, you can either use OBS Links (`_link`), or `_multibuild`  files ot achieve that.
- Either create links which correspond to the names of the other spec files, or create a `_multibuild` file using the spec file names as `flavor`:
+ Note that if you actually want to build all the spec files, you can either use OBS Links (`_link`), or `_multibuild` files to achieve that.
+ Either create links that correspond to the names of the other spec files or create a `_multibuild` file using the spec file names as `flavor`:
 
 ```
 <multibuild>
